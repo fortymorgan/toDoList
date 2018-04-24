@@ -1,5 +1,6 @@
 const inputField = document.getElementById('input-field');
 const addListItemButton = document.getElementById('add-listitem-button');
+const selectAllCheckbox = document.getElementById('select-all');
 
 const addItemToList = id => {
   const listItem = document.createElement('div');
@@ -41,3 +42,16 @@ inputField.addEventListener('keydown', event => {
     addIfNotEmpty();
   }
 });
+
+const toggleAllCheckbox = toggle => {
+  document.querySelectorAll('input[id^=checkbox]')
+    .forEach(elem => elem.checked = toggle);
+}
+
+selectAllCheckbox.addEventListener('change', event => {
+  if (event.target.checked) {
+    toggleAllCheckbox(true);
+  } else {
+    toggleAllCheckbox(false);
+  }
+})
