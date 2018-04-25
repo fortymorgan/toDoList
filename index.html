@@ -4,12 +4,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ToDo List</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="input-form">
-    <input type="checkbox" id="select-all">
-    <input type="text" id="input-field">
-    <button id="add-listitem-button">Add to list</button>
+  <div class="container" id="container">
+    <h1>ToDoList</h1>
+    <div class="input-container" id="input-form">
+      <input type="text" id="input-field" placeholder="What to do?" autofocus>
+      <button class="add-button" id="add-listitem-button">Add to list</button>
+    </div>
+    <div class="li-container" id="li-container"></div>
   </div>
   <script src="toDoList.js"></script>
 </body>
