@@ -1,22 +1,26 @@
 const inputField = document.getElementById('input-field');
 const addListItemButton = document.getElementById('add-listitem-button');
-const selectAllCheckbox = document.getElementById('select-all');
+const listItemContainer = document.getElementById('li-container');
 
 const addItemToList = id => {
   const listItem = document.createElement('div');
+  listItem.classList.add('list-item');
 
   listItem.innerHTML = `<input type="checkbox" id="checkbox-${id}">
   <label for="checkbox-${id}" id="list-item-${id}">${inputField.value}</label>
-  <button id="del-item-${id}">x</button>`;
+  <button class="del-button" id="del-item-${id}">✕</button>`;
 
-  document.body.appendChild(listItem);
+  listItemContainer.appendChild(listItem);
   inputField.value = '';
 
   const getElement = prefix => document.getElementById(`${prefix}-${id}`);
-
+  
   const delButton = getElement('del-item');
   delButton.addEventListener('click', () => listItem.remove());
-
+  
+  listItem.addEventListener('mouseover', () => delButton.classList.add('active'));
+  listItem.addEventListener('mouseleave', () => delButton.classList.remove('active'));
+  
   const checkDone = getElement('checkbox');
   const listItemValue = getElement('list-item')
   checkDone.addEventListener('change', event => {
