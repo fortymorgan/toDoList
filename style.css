@@ -64,7 +64,6 @@ label.done {
 }
 
 .del-button {
-    display: none;
     margin-right: 10px;
     color: coral;
     border: none;
