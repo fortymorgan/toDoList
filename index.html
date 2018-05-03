@@ -10,9 +10,11 @@
   <div class="container" id="container">
     <h1>ToDoList</h1>
     <div class="input-container" id="input-form">
-      <input type="checkbox" id="select-all">
-      <input type="text" id="input-field" placeholder="What to do?" autofocus>
-      <button class="add-button" id="add-listitem-button">Add to list</button>
+      <label class="for-checkbox-custom">
+        <input type="checkbox" id="select-all">
+        <span class="checkbox-custom"></span>
+      </label>
+      <input class="enter" type="text" id="input-field" placeholder="What needs to be done?" autofocus>
     </div>
     <div class="li-container" id="li-container"></div>
     <div class="footer" id="footer">

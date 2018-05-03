@@ -4,22 +4,59 @@ body {
 
 .container {
     margin: 0 auto;
-    width: 500px;
+    width: 40%;
+    min-width: 300px;
     border: 1px solid #c4c4b3;
     text-align: center;
-    background: ivory;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    background: #fffff0;
+    box-shadow: 0 0 10px #00000033;
 }
 
 .input-container {
+    position: relative;
     padding-bottom: 50px;
 }
 
-.add-button {
-    background-color: #f8f8e2;
-    border: 1px solid #c4c4b3;
-    margin-left: 10px;
-    padding: 2px 10px;
+.for-checkbox-custom {
+    position: absolute;
+    top: 0;
+    left: 15%;
+}
+
+/* checkbox-custom */
+.for-checkbox-custom input {
+    display: none;
+    margin: 0;
+}
+
+.checkbox-custom {
+    display: inline-block;
+    position: relative;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #dfdfdf;
+}
+
+.for-checkbox-custom input:checked + .checkbox-custom::before {
+    content: "";
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    top: 2px;
+    left: 2px;
+    background: #d1d0d0;
+}
+/* checkbox-custom */
+
+.input-container .enter {
+    position: absolute;
+    top: -3px;
+    left: 23%;
+    border: none;
+    outline: none;  
+    background: #fffff0;
+    margin: 0;
+    padding-top: 5px;
 }
 
 .li-container {
@@ -36,11 +73,6 @@ body {
     margin-bottom: 20px;
     background: #f8f8e2;
     box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-}
-
-#input-field {
-    /* background: #fafaf2; */
-    outline-color: #c4c4b3;
 }
 
 input[type="checkbox"] {
@@ -79,4 +111,5 @@ label.done {
 
 ::-webkit-input-placeholder {
     opacity: 0.5;
+    font-style: italic;
 }
