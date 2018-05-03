@@ -6,10 +6,11 @@ const footerContainer = document.getElementById('footer');
 const filterContainer = document.getElementById('filter-container');
 const itemsLeft = document.getElementById('items-left');
 
-const storage = JSON.parse(window.localStorage.getItem('todo-list'));
+const state = !window.localStorage.getItem('todo-list') ? 
+  JSON.parse(window.localStorage.getItem('todo-list')) : {storage: [], filter: 'all',};
 
 const toLocalStorage = () => {
-  const jsonString = JSON.stringify(storage);
+  const jsonString = JSON.stringify(state);
   window.localStorage.setItem('todo-list', jsonString);
 }
 
@@ -20,44 +21,44 @@ const addItemToList = id => {
     checked: false,
   };
   
-  storage.push(newListItem);
+  state.storage.push(newListItem);
   inputField.value = '';
   toLocalWithRender();
 };
 
 const removeItemFromList = id => {
-  const indexOf = storage.findIndex(item => item.id === id);
-  storage.splice(indexOf, 1);
+  const indexOf = state.storage.findIndex(item => item.id === id);
+  state.storage.splice(indexOf, 1);
   toLocalWithRender();
 };
 
 const checkItemList = id => {
-  const indexOf = storage.findIndex(item => item.id === id);
-  storage[indexOf].checked = !storage[indexOf].checked;
+  const indexOf = state.storage.findIndex(item => item.id === id);
+  state.storage[indexOf].checked = !state.storage[indexOf].checked;
   toLocalWithRender();
 };
 
 const checkAllItems = state => {
-  storage.forEach(item => item.checked = state);
+  state.storage.forEach(item => item.checked = state);
   toLocalWithRender();
 }
 
 const renderFiltered = state => {
-  const filtered = storage.filter(item => item.checked === state);
+  const filtered = state.storage.filter(item => item.checked === state);
   renderList(filtered);
 }
 
 const toLocalWithRender = () => {
-  renderList(storage);
+  renderList(state.storage);
   toLocalStorage();
 }
 
 const clearCompleted = () => {
-  const idToClear = storage.reduce((acc, item) => item.checked ? acc.concat(item.id) : acc, []);
+  const idToClear = state.storage.reduce((acc, item) => item.checked ? acc.concat(item.id) : acc, []);
   idToClear.forEach(item => removeItemFromList(item));
 }
 
-const activeItemsLeft = () => storage.reduce((acc, item) => item.checked ? acc : acc + 1, 0)
+const activeItemsLeft = () => state.storage.reduce((acc, item) => item.checked ? acc : acc + 1, 0)
 
 const footerRender = () => {
   itemsLeft.innerText = `${activeItemsLeft()} items left`;
@@ -74,7 +75,7 @@ const footerRender = () => {
     const getFilter = prefix => document.getElementById(`filter-${prefix}`);
 
     const filterAll = getFilter('all');
-    filterAll.addEventListener('click', () => renderList(storage));
+    filterAll.addEventListener('click', () => renderList(state.storage));
 
     const filterActive = getFilter('active');
     filterActive.addEventListener('click', () => renderFiltered(false));
@@ -114,7 +115,7 @@ const renderList = list => {
     });
   });
 
-  if (storage.length > 0) {
+  if (state.storage.length > 0) {
     footerRender()
    } else {
      filterContainer.innerHTML = '';
@@ -144,4 +145,4 @@ selectAllCheckbox.addEventListener('change', event => {
   }
 });
 
-renderList(storage);
+renderList(state.storage);
