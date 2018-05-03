@@ -114,7 +114,10 @@ const render = () => {
     const listItem = document.createElement('div');
     listItem.classList.add('list-item');
 
-    listItem.innerHTML = `<input type="checkbox" id="checkbox-${item.id}"${item.checked ? ' checked' : ''}>
+    listItem.innerHTML = `<label class="li-checkbox-custom">
+      <input type="checkbox" id="checkbox-${item.id}"${item.checked ? ' checked' : ''}>
+      <span class="checkbox-custom"></span>
+    </label>
     <label for="checkbox-${item.id}" id="list-item-${item.id}">${item.value}</label>
     <button class="del-button" id="del-item-${item.id}">✕</button>`;
 
