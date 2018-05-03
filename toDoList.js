@@ -6,7 +6,7 @@ const footerContainer = document.getElementById('footer');
 const filterContainer = document.getElementById('filter-container');
 const itemsLeft = document.getElementById('items-left');
 
-const state = !window.localStorage.getItem('todo-list') ? 
+const state = window.localStorage.getItem('todo-list') ? 
   JSON.parse(window.localStorage.getItem('todo-list')) : {storage: [], filter: 'all',};
 
 const toLocalStorage = () => {
