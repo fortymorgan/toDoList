@@ -68,7 +68,7 @@ const footerRender = () => {
   <input type="radio" id="filter-completed" name="filter" value="completed"${state.filter === 'completed' ?
   ' checked' : ''}>
   <label for="filter-completed">Completed</label>
-  <button class="clear-comleted" id="clear-completed">Clear completed</button>`
+  <button class="clear-completed" id="clear-completed">Clear completed</button>`
 
   const getFilter = prefix => document.getElementById(`filter-${prefix}`);
 
@@ -113,6 +113,7 @@ const render = () => {
   list.forEach(item => {
     const listItem = document.createElement('div');
     listItem.classList.add('list-item');
+    listItem.id = `item-${item.id}`;
 
     listItem.innerHTML = `<label class="li-checkbox-custom">
       <input type="checkbox" id="checkbox-${item.id}"${item.checked ? ' checked' : ''}>
@@ -161,12 +162,23 @@ inputField.addEventListener('keydown', event => {
   }
 });
 
-selectAllCheckbox.addEventListener('change', event => {
+selectAllCheckbox.addEventListener('click', event => {
   if (event.target.checked) {
     checkAllItems(true);
   } else {
     checkAllItems(false);
   }
 });
+
+const extractPrevState = () => {
+  const prevDom = [...listItemContainer.querySelectorAll('.list-item')];
+  return prevDom.map(item => {
+    const id = +item.id.substr(5);
+    const value = item.querySelector(`#list-item-${id}`).innerText;
+    const checked = item.querySelector(`#checkbox-${id}`).checked;
+
+    return {id, value, checked};
+  });
+};
 
 render();
