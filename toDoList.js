@@ -133,7 +133,8 @@ const render = () => {
     });
   });
   
-  selectAllCheckbox.checked = state.storage.every(item => item.checked === true);
+  selectAllCheckbox.checked = state.storage.length > 0 ? 
+    state.storage.every(item => item.checked === true) : false;
 
   if (state.storage.length > 0) {
     footerRender()
