@@ -38,13 +38,13 @@ const checkItemList = id => {
   toLocalWithRender();
 };
 
-const checkAllItems = state => {
-  state.storage.forEach(item => item.checked = state);
+const checkAllItems = pred => {
+  state.storage.forEach(item => item.checked = pred);
   toLocalWithRender();
 }
 
-const renderFiltered = state => {
-  const filtered = state.storage.filter(item => item.checked === state);
+const renderFiltered = pred => {
+  const filtered = state.storage.filter(item => item.checked === pred);
   renderList(filtered);
 }
 
