@@ -172,13 +172,17 @@ selectAllCheckbox.addEventListener('click', event => {
 
 const extractPrevState = () => {
   const prevDom = [...listItemContainer.querySelectorAll('.list-item')];
-  return prevDom.map(item => {
+  storage = prevDom.map(item => {
     const id = +item.id.substr(5);
     const value = item.querySelector(`#list-item-${id}`).innerText;
     const checked = item.querySelector(`#checkbox-${id}`).checked;
 
     return {id, value, checked};
   });
+  const filters = [...filterContainer.querySelectorAll('input')];
+  const [activeFilter] = filters.filter(item => item.checked);
+
+  return {storage, filter: activeFilter.value};
 };
 
 render();
