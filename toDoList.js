@@ -43,13 +43,8 @@ const checkAllItems = pred => {
   toLocalWithRender();
 }
 
-const renderFiltered = pred => {
-  const filtered = state.storage.filter(item => item.checked === pred);
-  renderList(filtered);
-}
-
 const toLocalWithRender = () => {
-  renderList(state.storage);
+  render();
   toLocalStorage();
 }
 
@@ -63,35 +58,58 @@ const activeItemsLeft = () => state.storage.reduce((acc, item) => item.checked ?
 const footerRender = () => {
   itemsLeft.innerText = `${activeItemsLeft()} items left`;
 
-  if (!filterContainer.innerHTML) {
-    filterContainer.innerHTML = `<input type="radio" id="filter-all" name="filter" value="all">
-    <label for="filter-all">All</label>
-    <input type="radio" id="filter-active" name="filter" value="active">
-    <label for="filter-active">Active</label>
-    <input type="radio" id="filter-completed" name="filter" value="completed">
-    <label for="filter-completed">Completed</label>
-    <button class="clear-comleted" id="clear-completed">Clear completed</button>`
+  filterContainer.innerHTML = `
+  <input type="radio" id="filter-all" name="filter" value="all"${state.filter === 'all' ?
+    ' checked' : ''}>
+  <label for="filter-all">All</label>
+  <input type="radio" id="filter-active" name="filter" value="active"${state.filter === 'active' ?
+  ' checked' : ''}>
+  <label for="filter-active">Active</label>
+  <input type="radio" id="filter-completed" name="filter" value="completed"${state.filter === 'completed' ?
+  ' checked' : ''}>
+  <label for="filter-completed">Completed</label>
+  <button class="clear-comleted" id="clear-completed">Clear completed</button>`
 
-    const getFilter = prefix => document.getElementById(`filter-${prefix}`);
+  const getFilter = prefix => document.getElementById(`filter-${prefix}`);
 
-    const filterAll = getFilter('all');
-    filterAll.addEventListener('click', () => renderList(state.storage));
+  const filterAll = getFilter('all');
+  filterAll.addEventListener('click', () => {
+    state.filter = 'all';
+    toLocalWithRender();
+  });
 
-    const filterActive = getFilter('active');
-    filterActive.addEventListener('click', () => renderFiltered(false));
-    
-    const filterCompleted = getFilter('completed');
-    filterCompleted.addEventListener('click', () => renderFiltered(true));
+  const filterActive = getFilter('active');
+  filterActive.addEventListener('click', () => {
+    state.filter = 'active';
+    toLocalWithRender();
+  });
+  
+  const filterCompleted = getFilter('completed');
+  filterCompleted.addEventListener('click', () => {
+    state.filter = 'completed';
+    toLocalWithRender();
+  });
 
-    const clearCompletedButton = document.getElementById('clear-completed');
-    clearCompletedButton.addEventListener('click', () => clearCompleted());
-  } else {
-    return;
-  }
+  const clearCompletedButton = document.getElementById('clear-completed');
+  clearCompletedButton.addEventListener('click', () => clearCompleted());
 };
 
-const renderList = list => {
+const render = () => {
   listItemContainer.innerHTML = '';
+
+  let list;
+  switch (state.filter) {
+    case 'all':
+      list = state.storage;
+      break;
+    case 'active':
+      list = state.storage.filter(item => item.checked === false);
+      break;
+    case 'completed':
+      list = state.storage.filter(item => item.checked === true);
+      break;
+  }
+
   list.forEach(item => {
     const listItem = document.createElement('div');
     listItem.classList.add('list-item');
@@ -114,6 +132,8 @@ const renderList = list => {
       checkItemList(item.id);
     });
   });
+  
+  selectAllCheckbox.checked = state.storage.every(item => item.checked === true);
 
   if (state.storage.length > 0) {
     footerRender()
@@ -145,4 +165,4 @@ selectAllCheckbox.addEventListener('change', event => {
   }
 });
 
-renderList(state.storage);
+render();
