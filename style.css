@@ -151,7 +151,7 @@ input[type="checkbox"] {
     border: 1px solid rgba(119, 119, 119, 0.3);
 }
 
-button.clear-comleted {
+button.clear-completed {
     font-size: 12px;
     color: #777777;
     margin: 0;
@@ -162,11 +162,11 @@ button.clear-comleted {
     outline: none;
 }
 
-button.clear-comleted:hover {
+button.clear-completed:hover {
     text-decoration: underline;
 }
 
-button.clear-comleted:active {
+button.clear-completed:active {
     text-decoration: none;
 }
 
