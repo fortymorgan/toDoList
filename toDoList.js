@@ -123,7 +123,7 @@ const renderList = list => {
    }
 };
 
-let nextItemId = state.storage[state.storage.length - 1].id;
+let nextItemId = !state.storage.length ? 0 : state.storage[state.storage.length - 1].id + 1;
 
 const addIfNotEmpty = () => {
   if (inputField.value) {
