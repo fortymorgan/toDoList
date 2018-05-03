@@ -169,7 +169,7 @@ const extractPrevState = () => {
   const filters = [...filterContainer.querySelectorAll('input')];
   const [activeFilter] = filters.filter(item => item.checked);
 
-  return {storage, filter: activeFilter.value};
+  return {storage, filter: !activeFilter ? state.filter : activeFilter.value};
 };
 
 render();
