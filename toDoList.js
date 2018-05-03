@@ -70,25 +70,12 @@ const footerRender = () => {
   <label for="filter-completed">Completed</label>
   <button class="clear-completed" id="clear-completed">Clear completed</button>`
 
-  const getFilter = prefix => document.getElementById(`filter-${prefix}`);
+  const filters = filterContainer.querySelectorAll('input');
 
-  const filterAll = getFilter('all');
-  filterAll.addEventListener('click', () => {
-    state.filter = 'all';
+  filters.forEach(item => item.addEventListener('click', event => {
+    state.filter = event.target.value;
     toLocalWithRender();
-  });
-
-  const filterActive = getFilter('active');
-  filterActive.addEventListener('click', () => {
-    state.filter = 'active';
-    toLocalWithRender();
-  });
-  
-  const filterCompleted = getFilter('completed');
-  filterCompleted.addEventListener('click', () => {
-    state.filter = 'completed';
-    toLocalWithRender();
-  });
+  }));
 
   const clearCompletedButton = document.getElementById('clear-completed');
   clearCompletedButton.addEventListener('click', () => clearCompleted());
