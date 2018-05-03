@@ -68,27 +68,14 @@ const footerRender = () => {
   <input type="radio" id="filter-completed" name="filter" value="completed"${state.filter === 'completed' ?
   ' checked' : ''}>
   <label for="filter-completed">Completed</label>
-  <button class="clear-comleted" id="clear-completed">Clear completed</button>`
+  <button class="clear-completed" id="clear-completed">Clear completed</button>`
 
-  const getFilter = prefix => document.getElementById(`filter-${prefix}`);
+  const filters = filterContainer.querySelectorAll('input');
 
-  const filterAll = getFilter('all');
-  filterAll.addEventListener('click', () => {
-    state.filter = 'all';
+  filters.forEach(item => item.addEventListener('click', event => {
+    state.filter = event.target.value;
     toLocalWithRender();
-  });
-
-  const filterActive = getFilter('active');
-  filterActive.addEventListener('click', () => {
-    state.filter = 'active';
-    toLocalWithRender();
-  });
-  
-  const filterCompleted = getFilter('completed');
-  filterCompleted.addEventListener('click', () => {
-    state.filter = 'completed';
-    toLocalWithRender();
-  });
+  }));
 
   const clearCompletedButton = document.getElementById('clear-completed');
   clearCompletedButton.addEventListener('click', () => clearCompleted());
@@ -113,8 +100,12 @@ const render = () => {
   list.forEach(item => {
     const listItem = document.createElement('div');
     listItem.classList.add('list-item');
+    listItem.id = `item-${item.id}`;
 
-    listItem.innerHTML = `<input type="checkbox" id="checkbox-${item.id}"${item.checked ? ' checked' : ''}>
+    listItem.innerHTML = `<label class="li-checkbox-custom">
+      <input type="checkbox" id="checkbox-${item.id}"${item.checked ? ' checked' : ''}>
+      <span class="checkbox-custom"></span>
+    </label>
     <label for="checkbox-${item.id}" id="list-item-${item.id}">${item.value}</label>
     <button class="del-button" id="del-item-${item.id}">✕</button>`;
 
@@ -133,7 +124,8 @@ const render = () => {
     });
   });
   
-  selectAllCheckbox.checked = state.storage.every(item => item.checked === true);
+  selectAllCheckbox.checked = state.storage.length > 0 ? 
+    state.storage.every(item => item.checked === true) : false;
 
   if (state.storage.length > 0) {
     footerRender()
@@ -157,12 +149,27 @@ inputField.addEventListener('keydown', event => {
   }
 });
 
-selectAllCheckbox.addEventListener('change', event => {
+selectAllCheckbox.addEventListener('click', event => {
   if (event.target.checked) {
     checkAllItems(true);
   } else {
     checkAllItems(false);
   }
 });
+
+const extractPrevState = () => {
+  const prevDom = [...listItemContainer.querySelectorAll('.list-item')];
+  storage = prevDom.map(item => {
+    const id = +item.id.substr(5);
+    const value = item.querySelector(`#list-item-${id}`).innerText;
+    const checked = item.querySelector(`#checkbox-${id}`).checked;
+
+    return {id, value, checked};
+  });
+  const filters = [...filterContainer.querySelectorAll('input')];
+  const [activeFilter] = filters.filter(item => item.checked);
+
+  return {storage, filter: !activeFilter ? state.filter : activeFilter.value};
+};
 
 render();
