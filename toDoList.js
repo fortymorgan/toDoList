@@ -2,12 +2,14 @@ const inputField = document.getElementById('input-field');
 const addListItemButton = document.getElementById('add-listitem-button');
 const listItemContainer = document.getElementById('li-container');
 const selectAllCheckbox = document.getElementById('select-all');
-const footerContainer = document.getElementById('footer');
-const filterContainer = document.getElementById('filter-container');
-const itemsLeft = document.getElementById('items-left');
+const mainContainer = document.getElementById('container');
 
 const state = window.localStorage.getItem('todo-list') ? 
-  JSON.parse(window.localStorage.getItem('todo-list')) : {storage: [], filter: 'all',};
+JSON.parse(window.localStorage.getItem('todo-list')) : {storage: [], filter: 'all',};
+let prevState = {
+  storage: [],
+  filter: state.filter,
+};
 
 const toLocalStorage = () => {
   const jsonString = JSON.stringify(state);
@@ -44,7 +46,7 @@ const checkAllItems = pred => {
 }
 
 const toLocalWithRender = () => {
-  render();
+  smartRender();
   toLocalStorage();
 }
 
@@ -56,11 +58,18 @@ const clearCompleted = () => {
 const activeItemsLeft = () => state.storage.reduce((acc, item) => item.checked ? acc : acc + 1, 0)
 
 const footerRender = () => {
-  itemsLeft.innerText = `${activeItemsLeft()} items left`;
+  const footer = document.createElement('div');
+  footer.classList.add('footer');
+  footer.id = 'footer';
+  footer.innerHTML = `<span class="items-left" id="items-left"></span>
+  <div class="filter-container" id="filter-container"></div>`;
+  mainContainer.appendChild(footer);
+  
+  const filterContainer = document.getElementById('filter-container');
 
   filterContainer.innerHTML = `
   <input type="radio" id="filter-all" name="filter" value="all"${state.filter === 'all' ?
-    ' checked' : ''}>
+  ' checked' : ''}>
   <label for="filter-all">All</label>
   <input type="radio" id="filter-active" name="filter" value="active"${state.filter === 'active' ?
   ' checked' : ''}>
@@ -81,23 +90,51 @@ const footerRender = () => {
   clearCompletedButton.addEventListener('click', () => clearCompleted());
 };
 
-const render = () => {
-  listItemContainer.innerHTML = '';
+let nextItemId = !state.storage.length ? 0 : state.storage[state.storage.length - 1].id + 1;
 
-  let list;
+const addIfNotEmpty = () => {
+  if (inputField.value) {
+    addItemToList(nextItemId++);
+  }
+};
+
+inputField.addEventListener('keydown', event => {
+  if (event.keyCode === 13) {
+    addIfNotEmpty();
+  }
+});
+
+selectAllCheckbox.addEventListener('click', event => {
+  if (event.target.checked) {
+    checkAllItems(true);
+  } else {
+    checkAllItems(false);
+  }
+});
+
+const smartRender = () => {
+  let itemsToShow;
+  
   switch (state.filter) {
     case 'all':
-      list = state.storage;
+      itemsToShow = state.storage;
       break;
     case 'active':
-      list = state.storage.filter(item => item.checked === false);
+      itemsToShow = state.storage.filter(item => item.checked === false);
       break;
     case 'completed':
-      list = state.storage.filter(item => item.checked === true);
+      itemsToShow = state.storage.filter(item => item.checked === true);
       break;
   }
+  
+  const prevStateId = prevState.storage.map(item => item.id);
+  const itemsToAdd = itemsToShow.filter(item => !prevStateId.includes(item.id));
+  const stateId = itemsToShow.map(item => item.id);
+  const idToDelete = prevStateId.filter(id => !stateId.includes(id));
 
-  list.forEach(item => {
+  idToDelete.forEach(id => document.getElementById(`item-${id}`).remove());
+  
+  itemsToAdd.forEach(item => {
     const listItem = document.createElement('div');
     listItem.classList.add('list-item');
     listItem.id = `item-${item.id}`;
@@ -123,53 +160,25 @@ const render = () => {
       checkItemList(item.id);
     });
   });
-  
+
+  if (prevState.storage.length === 0 && state.storage.length !== 0) {
+    footerRender();
+  } else if (prevState.storage.length !== 0 && state.storage.length === 0) {
+    document.getElementById('footer').remove();
+  }
+
+  const itemsLeft = document.getElementById('items-left');
+  if (itemsLeft) {
+    itemsLeft.innerText = `${activeItemsLeft()} items left`;
+  }
+
   selectAllCheckbox.checked = state.storage.length > 0 ? 
     state.storage.every(item => item.checked === true) : false;
 
-  if (state.storage.length > 0) {
-    footerRender()
-   } else {
-     filterContainer.innerHTML = '';
-     itemsLeft.innerText = '';
-   }
+  prevState = {
+    storage: [...itemsToShow],
+    filter: state.filter,
+  };
 };
 
-let nextItemId = !state.storage.length ? 0 : state.storage[state.storage.length - 1].id + 1;
-
-const addIfNotEmpty = () => {
-  if (inputField.value) {
-    addItemToList(nextItemId++);
-  }
-};
-
-inputField.addEventListener('keydown', event => {
-  if (event.keyCode === 13) {
-    addIfNotEmpty();
-  }
-});
-
-selectAllCheckbox.addEventListener('click', event => {
-  if (event.target.checked) {
-    checkAllItems(true);
-  } else {
-    checkAllItems(false);
-  }
-});
-
-const extractPrevState = () => {
-  const prevDom = [...listItemContainer.querySelectorAll('.list-item')];
-  storage = prevDom.map(item => {
-    const id = +item.id.substr(5);
-    const value = item.querySelector(`#list-item-${id}`).innerText;
-    const checked = item.querySelector(`#checkbox-${id}`).checked;
-
-    return {id, value, checked};
-  });
-  const filters = [...filterContainer.querySelectorAll('input')];
-  const [activeFilter] = filters.filter(item => item.checked);
-
-  return {storage, filter: !activeFilter ? state.filter : activeFilter.value};
-};
-
-render();
+smartRender();
