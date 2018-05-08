@@ -14,15 +14,32 @@ body {
 }
 
 .input-container {
-    position: relative;
+    padding-top: 10px;
     padding-bottom: 50px;
 }
 
 .for-checkbox-custom {
-    position: absolute;
-    top: 0;
-    left: 16%;
+    float: left;
+    padding: 10px 20px;
 }
+
+.input-container .enter {
+    float: left;
+    border: none;
+    outline: none;
+    width: 50%;
+    margin: 0;
+    padding-top: 12px;
+    font-size: 16px;
+    background: #ffffff;
+}
+
+::-webkit-input-placeholder {
+    font-style: italic;
+    font-size: 16px;
+    opacity: 0.5;
+}
+/* .input-container */
 
 /* checkbox-custom */
 .for-checkbox-custom input {
@@ -71,22 +88,37 @@ body {
 }
 
 .list-item {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
     padding: 10px 0;
-    border: 1px solid #c4c4b3;
-    margin-bottom: 20px;
-    background: #f8f8e2;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.list-item::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.li-checkbox-custom {
+    display: block;
+    float: left;
+    width: 20px;
+    padding: 10px;
+    padding-left: 20px;
+}
+
+.li-checkbox-custom .checkbox-custom {
+    border-radius: 50%;
 }
 
 input[type="checkbox"] {
     margin-left: 10px;
 }
 
-.list-item label {
-    flex-grow: 1;
+.list-item label[for^="checkbox"] {
+    float: left;
+    width: 80%;
     text-align: left;
     padding: 0 10px;
     word-wrap: break-word;
@@ -102,6 +134,9 @@ input[type="checkbox"] {
 }
 
 .del-button {
+    display: none;
+    float: right;
+    width: 20px;
     margin-right: 10px;
     color: coral;
     border: none;
