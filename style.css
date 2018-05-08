@@ -138,44 +138,57 @@ input[type="checkbox"] {
     float: right;
     width: 20px;
     margin-right: 10px;
+    padding-top: 10px;
+    padding-right: 20px;
+    font-size: 16px;
     color: coral;
     border: none;
     background: none;
-    font-size: 16px;
-    padding: 0;
-    width: 20px;
 }
 
-.del-button.active {
+.list-item:hover .del-button {
     display: block;
 }
+/* .li-container */
 
 /* footer */
 .footer {
-    padding-bottom: 30px;
+    padding: 30px 0;
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    overflow: hidden;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+                0 8px 0 -3px #f6f6f6,
+                0 9px 1px -3px rgba(0, 0, 0, 0.2),
+                0 16px 0 -6px #f6f6f6,
+                0 17px 2px -6px rgba(0, 0, 0, 0.2);
 }
 
 .footer .items-left,
 .footer .filter-container {
     display: inline-block;
+    margin: 0;
     font-size: 12px;
     color: #777777;
-    margin: 0;
-}
-
-.footer span.items-left {
-    margin-left: -30px;
 }
 
 .filter-container input[type="radio"] {
-    margin: 0;
     display: none;
+    margin: 0;
 }
 
 .filter-container label {
+    padding: 3px 5px;
     border: 1px solid transparent;
     border-radius: 2px;
-    padding: 3px 5px;
 }
 
 .filter-container label:hover {
